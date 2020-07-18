@@ -12,27 +12,37 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
-    if params[:ratings]
-      @ratings_checked = params[:ratings].keys
-      session[:ratings] = params[:ratings]
-    else
-      if session[:ratings]
-        @ratings_checked = session[:ratings].keys
-      else
-        @ratings_checked = @all_ratings
-      end
+    
+    sort_key = params[:sort] || session[:sort]
+    ratings_keys = (params[:ratings] || session[:ratings] || {}).keys
+    
+    if params[:sort] != session[:sort]
+      session[:sort] = sort
+      flash.keep
+      #redirect_to sort: sort_key, ratings: ratings_keys 
     end
     
-    if params[:sort]
-      @movies = Movie.order(params[:sort])
-      session[:sort] = params[:sort]
-    else
-      if session[:sort]
-        @movies = Movie.order(session[:sort]).where(:rating => @ratings_checked)
-      else
-        @movies = Movie.where(:rating => @ratings_checked)
-      end
-    end
+#     if params[:ratings]
+#       @ratings_checked = params[:ratings].keys
+#       session[:ratings] = params[:ratings]
+#     else
+#       if session[:ratings]
+#         @ratings_checked = session[:ratings].keys
+#       else
+#         @ratings_checked = @all_ratings
+#       end
+#     end
+    
+#     if params[:sort]
+#       @movies = Movie.order(params[:sort])
+#       session[:sort] = params[:sort]
+#     else
+#       if session[:sort]
+#         @movies = Movie.order(session[:sort]).where(:rating => @ratings_checked)
+#       else
+#         @movies = Movie.where(:rating => @ratings_checked)
+#       end
+#     end
   end
 
   def new
