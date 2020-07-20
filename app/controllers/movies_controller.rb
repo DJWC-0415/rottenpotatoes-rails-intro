@@ -40,20 +40,6 @@ class MoviesController < ApplicationController
       end
       @movies = Movie.where(:rating => @ratings_checked).order(session[:sort])
     end
-      
-#     if params[:ratings]
-#       @ratings_checked = params[:ratings].keys
-#       session[:ratings] = params[:ratings]
-#     else
-#       @ratings_checked = session[:ratings].keys
-#     end
-    
-#     if params[:sort]
-#       @movies = Movie.where(:rating => @ratings_checked).order(params[:sort])
-#       session[:sort] = params[:sort]
-#     else
-#       @movies = Movie.where(:rating => @ratings_checked)
-#     end
   end
 
   def new
