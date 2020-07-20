@@ -34,12 +34,12 @@ class MoviesController < ApplicationController
     if sort_key_from_session
       session[:sort] = sort_key
       flash.keep
-      redirect_to sort: sort_key, ratings: ratings_keys
+      redirect_to sort: sort_key, ratings: ratings_keys and return
     elsif ratings_keys_from_session
       session[:sort] = sort_key
       session[:ratings] = ratings_keys
       flash.keep
-      redirect_to sort: sort_key, ratings: ratings_keys
+      redirect_to sort: sort_key, ratings: ratings_keys and return
     else
       @movies = Movie.order(sort_key).where(:rating => @ratings_checked)
     end
