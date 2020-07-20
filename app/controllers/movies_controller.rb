@@ -26,17 +26,22 @@ class MoviesController < ApplicationController
       if session[:ratings].nil?
         ratings_keys = {}
       else
-        ratings_keys = session[:ratings].keys
+        ratings_keys = session[:ratings]
         ratings_keys_from_session = true
       end
-    else
-      ratings_keys = ratings_keys.keys
     end
     
-    if params[:sort] != session[:sort]
+    if sort_key_from_session
       session[:sort] = sort
       flash.keep
-      #redirect_to sort: sort_key, ratings: ratings_keys 
+      redirect_to sort: sort_key, ratings: ratings_keys
+    elsif ratings_keys_from_session
+      session[:sort] = sort_key
+      session[:ratings] = ratings_keys
+      flash.keep
+      redirect_to sort: sort_key, ratings: ratings_keys
+    else
+      @movies = Movie.order(sort_key).where(:rating => @ratings_checked)
     end
     
 #     if params[:ratings]
