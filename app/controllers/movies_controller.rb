@@ -21,7 +21,7 @@ class MoviesController < ApplicationController
     elsif params[:ratings]
       @ratings_checked = params[:ratings].keys
       session[:ratings] = params[:ratings]
-      @movies = Movie.where(:rating => @ratings_checked)
+      @movies = Movie.where(:rating => @ratings_checked).order(session[:sort])
     else
       @ratings_checked = session[:ratings]
       if session[:ratings]
