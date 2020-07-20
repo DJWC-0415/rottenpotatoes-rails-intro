@@ -20,7 +20,7 @@ class MoviesController < ApplicationController
       @movies = Movie.where(:rating => @ratings_checked).order(params[:sort])
     elsif params[:ratings]
       session[:ratings] = params[:ratings]
-      redirect_to sort: session[:sort], ratings: params[:ratings]
+      redirect_to sort: session[:sort], ratings: params[:ratings] and return
     elsif params[:sort]
       @ratings_checked = session[:ratings]
       if session[:ratings]
@@ -29,7 +29,7 @@ class MoviesController < ApplicationController
         @ratings_checked = @all_ratings
       end
       session[:sort] = params[:sort]
-      redirect_to sort: params[:sort], ratings: @ratings_checked.product([1]).to_h
+      redirect_to sort: params[:sort], ratings: @ratings_checked.product([1]).to_h and return
     else
       @ratings_checked = session[:ratings]
       if session[:ratings]
@@ -37,7 +37,7 @@ class MoviesController < ApplicationController
       else
         @ratings_checked = @all_ratings
       end
-      redirect_to sort: session[:sort], ratings: @ratings_checked.product([1]).to_h
+      redirect_to sort: session[:sort], ratings: @ratings_checked.product([1]).to_h and return
     end
   end
 
