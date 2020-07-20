@@ -12,58 +12,47 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
-    
-    sort_key = params[:sort]
-    sort_key_from_session = false
-    if params[:sort].nil?
-      sort_key = session[:sort]
-      sort_key_from_session = true
+      
+    if params[:ratings] and params[:sort]
+      @ratings_checked = params[:ratings].keys
+      session[:ratings] = params[:ratings]
+      session[:sort] = params[:sort]
+      @movies = Movie.where(:rating => @ratings_checked).order(params[:sort])
+    elsif params[:ratings]
+      @ratings_checked = params[:ratings].keys
+      session[:ratings] = params[:ratings]
+      @movies = Movie.where(:rating => @ratings_checked).order(session[:sort])
+    elsif params[:sort]
+      @ratings_checked = session[:ratings]
+      if session[:ratings]
+        @ratings_checked = session[:ratings].keys
+      else
+        @ratings_checked = @all_ratings
+      end
+      session[:sort] = params[:sort]
+      @movies = Movie.where(:rating => @ratings_checked).order(params[:sort])
+    else
+      @ratings_checked = session[:ratings]
+      if session[:ratings]
+        @ratings_checked = session[:ratings].keys
+      else
+        @ratings_checked = @all_ratings
+      end
+      @movies = Movie.where(:rating => @ratings_checked).order(session[:sort])
     end
       
-    @ratings_checked = params[:ratings]
-    ratings_from_session = false
-    if params[:ratings].nil?
-      if session[:ratings].nil?
-        @ratings_checked = {}
-      else
-        @ratings_checked = session[:ratings]
-        ratings_from_session = true
-      end
-    end
-    
-    if sort_key_from_session
-      session[:sort] = sort_key
-      flash.keep
-      redirect_to sort: sort_key, ratings: @ratings_checked and return
-    elsif ratings_from_session
-      session[:sort] = sort_key
-      session[:ratings] = @ratings_checked
-      flash.keep
-      redirect_to sort: sort_key, ratings: @ratings_checked and return
-    else
-      @movies = Movie.order(sort_key).where(:rating => @ratings_checked)
-    end
-    
 #     if params[:ratings]
 #       @ratings_checked = params[:ratings].keys
 #       session[:ratings] = params[:ratings]
 #     else
-#       if session[:ratings]
-#         @ratings_checked = session[:ratings].keys
-#       else
-#         @ratings_checked = @all_ratings
-#       end
+#       @ratings_checked = session[:ratings].keys
 #     end
     
 #     if params[:sort]
-#       @movies = Movie.order(params[:sort])
+#       @movies = Movie.where(:rating => @ratings_checked).order(params[:sort])
 #       session[:sort] = params[:sort]
 #     else
-#       if session[:sort]
-#         @movies = Movie.order(session[:sort]).where(:rating => @ratings_checked)
-#       else
-#         @movies = Movie.where(:rating => @ratings_checked)
-#       end
+#       @movies = Movie.where(:rating => @ratings_checked)
 #     end
   end
 
