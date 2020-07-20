@@ -32,7 +32,7 @@ class MoviesController < ApplicationController
     end
     
     if sort_key_from_session
-      session[:sort] = sort
+      session[:sort] = sort_key
       flash.keep
       redirect_to sort: sort_key, ratings: ratings_keys
     elsif ratings_keys_from_session
